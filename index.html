@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Руслан Максимович | Основатель CENZURA | Эксперт по Wildberries</title>
+
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+    <!-- GSAP и ScrollTrigger для анимаций -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #0D0D1A;
+            --bg-card: #1A1A2E;
+            --primary-accent: #6A44FF;
+            --secondary-accent: #00D1FF;
+            --text-light: #F0F0F8;
+            --text-muted: #A0A0B8;
+            --font-main: 'Manrope', sans-serif;
+            --font-display: 'Orbitron', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .section { padding: 120px 0; position: relative; }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 80px;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+        .section-title span {
+            color: var(--primary-accent);
+            text-shadow: 0 0 15px var(--primary-accent);
+        }
+
+        /* --- HEADER --- */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 24px 0;
+            z-index: 1000; transition: background-color 0.3s;
+        }
+        .header.scrolled { background-color: rgba(13, 13, 26, 0.8); backdrop-filter: blur(10px); }
+        .header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; text-decoration: none; color: var(--text-light); }
+        .logo span { color: var(--primary-accent); }
+        .nav-links a {
+            color: var(--text-muted); text-decoration: none; margin-left: 32px;
+            font-weight: 600; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text-light); }
+
+        /* --- HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        .hero .subtitle {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 24px;
+            color: var(--secondary-accent);
+            text-shadow: 0 0 10px var(--secondary-accent);
+        }
+        .hero p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 40px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-accent);
+            color: var(--text-light);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(106, 68, 255, 0.3);
+        }
+
+        /* --- ABOUT --- */
+        .about-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: center; }
+        .about-photo-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .about-photo-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 3px;
+            background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        .about-photo { width: 100%; display: block; border-radius: 14px; }
+        .about-text h3 { font-size: 2rem; margin-bottom: 24px; }
+        .about-text p { color: var(--text-muted); line-height: 1.8; margin-bottom: 24px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; }
+        .stat-item .value { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--secondary-accent); }
+        .stat-item .label { color: var(--text-muted); }
+
+        /* --- SERVICES --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
+        .service-card {
+            background-color: var(--bg-card);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-accent);
+        }
+        .service-icon { margin-bottom: 24px; }
+        .service-icon svg { width: 48px; height: 48px; color: var(--primary-accent); }
+        .service-card h3 { font-size: 1.5rem; margin-bottom: 16px; }
+        .service-card p { color: var(--text-muted); line-height: 1.7; }
+
+        /* --- CASES --- */
+        .cases-grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+        .case-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            align-items: center;
+        }
+        .case-card:hover { transform: translateY(-10px); }
+        .case-card img { width: 100%; height: 100%; object-fit: cover; }
+        .case-content { padding: 32px; }
+        .case-content h3 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 8px; color: var(--secondary-accent); }
+        .case-content .case-description { color: var(--text-muted); margin-bottom: 24px; }
+        .case-results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; }
+        .case-result { font-size: 2rem; font-weight: 700; color: var(--text-light); }
+        .case-result-label { font-size: 0.9rem; color: var(--text-muted); }
+        
+        /* --- REVIEWS --- */
+        .reviews-slider-wrapper { position: relative; max-width: 800px; margin: 0 auto; }
+        .reviews-slider { display: flex; overflow: hidden; }
+        .review {
+            flex: 0 0 100%;
+            padding: 40px;
+            text-align: center;
+        }
+        .review-text { font-size: 1.25rem; font-style: italic; line-height: 1.7; margin-bottom: 24px; }
+        .review-author { font-weight: 700; }
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        .slider-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--primary-accent);
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: background-color 0.3s;
+        }
+        .slider-btn:hover { background-color: var(--primary-accent); }
+
+        /* --- CONTACT --- */
+        .contact-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            padding: 48px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .contact-wrapper h3 { font-size: 2rem; margin-bottom: 16px; }
+        .contact-wrapper p { color: var(--text-muted); margin-bottom: 32px; }
+        .social-buttons { display: flex; justify-content: center; gap: 24px; margin-bottom: 40px; }
+        .social-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 24px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: background-color 0.3s;
+        }
+        .social-btn:hover { background-color: var(--primary-accent); }
+        .social-btn svg { width: 24px; height: 24px; }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 16px;
+            background-color: var(--bg-dark);
+            border: 1px solid #33334E;
+            border-radius: 8px;
+            color: var(--text-light);
+            font-family: var(--font-main);
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .about-grid { grid-template-columns: 1fr; }
+            .case-card { grid-template-columns: 1fr; }
+            .case-card img { height: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="#hero" class="logo">Руслан<span>.</span></a>
+            <nav class="nav-links">
+                <a href="#about">Обо мне</a>
+                <a href="#services">Услуги</a>
+                <a href="#cases">Кейсы</a>
+                <a href="#contact">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <canvas id="hero-canvas"></canvas>
+            <div class="container hero-content">
+                <h1>Руслан Максимович</h1>
+                <h2 class="subtitle">Основатель бренда CENZURA</h2>
+                <p>Строю многомиллионные бренды на Wildberries с нуля и запускаю эффективные производственные цеха. Делюсь реальным опытом, а не теорией.</p>
+                <a href="#contact" class="cta-button">Записаться на консультацию</a>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">От идеи до <span>лидера рынка</span></h2>
+                <div class="about-grid">
+                    <div class="about-photo-wrapper">
+                        <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop" alt="[Фото Руслана Максимовича]" class="about-photo">
+                    </div>
+                    <div class="about-text">
+                        <h3>Путь от одного цеха до бренда-гиганта</h3>
+                        <p>Меня зовут Руслан Максимович. Я — практик, который прошел весь путь от закупки первой швейной машинки до создания бренда CENZURA, ставшего одним из лидеров в своей нише на Wildberries. Моя экспертиза основана не на курсах, а на реальных вызовах: построении производственных линий, управлении командой из сотен людей и разработке стратегий, которые принесли миллиардные обороты.</p>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="value">1 млрд+</div>
+                                <div class="label">оборот бренда в год</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="value">200+</div>
+                                <div class="label">сотрудников в команде</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="value">5000м²</div>
+                                <div class="label">собственное производство</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="section">
+            <div class="container">
+                <h2 class="section-title">Чем я могу <span>помочь</span></h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25m11.25 0h8.25a2.25 2.25 0 002.25-2.25V5.25A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25v13.5A2.25 2.25 0 005.25 21h3.75m11.25 0h-11.25" /></svg>
+                        </div>
+                        <h3>Стратегия для WB</h3>
+                        <p>Разработка пошагового плана по выходу и масштабированию вашего бренда на основе анализа рынка и моего опыта.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6.375a.625.625 0 01.625.625v3.75a.625.625 0 01-.625.625H9v-5zm0 5h6.375a.625.625 0 01.625.625v3.75a.625.625 0 01-.625.625H9v-5z" /></svg>
+                        </div>
+                        <h3>Запуск производства</h3>
+                        <p>Консультации по организации производственного цеха: от выбора помещения и оборудования до выстраивания потоковых линий.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3>Построение команды</h3>
+                        <p>Помощь в найме ключевых сотрудников (от технолога до фулфилмент-менеджера) и построении эффективной оргструктуры.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 1.085-1.085-1.085m1.085 1.085V18.75m-7.5-3.75h7.5m-7.5 0l-1 1.085-1.085-1.085m1.085 1.085V18.75" /></svg>
+                        </div>
+                        <h3>Личное наставничество</h3>
+                        <p>Индивидуальная работа с предпринимателями, которые готовы к кратному росту и построению большого системного бизнеса.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cases" class="section">
+            <div class="container">
+                <h2 class="section-title">Ключевой кейс: <span>Cenzura</span></h2>
+                <div class="cases-grid">
+                    <div class="case-card">
+                        <img src="https://images.unsplash.com/photo-1523381294911-8d3cead13475?q=80&w=2070&auto=format&fit=crop" alt="[Кейс CENZURA]">
+                        <div class="case-content">
+                            <h3>CENZURA</h3>
+                            <p class="case-description">Путь от локального производства до одного из самых узнаваемых брендов одежды на Wildberries.</p>
+                            <div class="case-results-grid">
+                                <div>
+                                    <p class="case-result">3 года</p>
+                                    <p class="case-result-label">Время на масштабирование</p>
+                                </div>
+                                <div>
+                                    <p class="case-result">Топ-5</p>
+                                    <p class="case-result-label">В категории "Одежда"</p>
+                                </div>
+                                <div>
+                                    <p class="case-result">>100 000</p>
+                                    <p class="case-result-label">Единиц в месяц</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reviews" class="section">
+            <div class="container">
+                <h2 class="section-title">Что говорят <span>партнеры</span></h2>
+                <div class="reviews-slider-wrapper">
+                    <div class="reviews-slider">
+                        <div class="review">
+                            <p class="review-text">"Работать с Русланом — значит работать с человеком, который видит всю картину целиком. Его понимание производственных процессов и рынка WB уникально. Он построил систему, которая работает как часы."</p>
+                            <p class="review-author">- Руководитель производства CENZURA</p>
+                        </div>
+                        <div class="review">
+                            <p class="review-text">"Мы поставляем ткани для CENZURA с самого начала. Видеть, как из небольшого цеха компания выросла в гиганта — это невероятно. Руслан обладает стратегическим видением и железной хваткой."</p>
+                            <p class="review-author">- Директор компании-поставщика</p>
+                        </div>
+                        <div class="review">
+                            <p class="review-text">"Я пришел в команду одним из первых. Руслан не просто руководитель, он — лидер, который вдохновляет и ведет за собой. Он создал не просто бренд, а целую культуру."</p>
+                            <p class="review-author">- Ведущий дизайнер CENZURA</p>
+                        </div>
+                    </div>
+                    <div class="slider-nav">
+                        <button class="slider-btn prev-btn">‹</button>
+                        <button class="slider-btn next-btn">›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container">
+                <div class="contact-wrapper">
+                    <h3>Готовы построить свой бренд?</h3>
+                    <p>Если вы нацелены на серьезный результат и готовы создавать большой системный бизнес, свяжитесь со мной.</p>
+                    <div class="social-buttons">
+                        <a href="https://wa.me/79990000000" target="_blank" class="social-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 14.2l-1.5-1.5-2.3 2.3c-.3-.2-.6-.3-.9-.5-.8-.4-1.6-.9-2.3-1.6s-1.2-1.5-1.6-2.3c-.2-.3-.4-.6-.5-.9l2.3-2.3-1.5-1.5-2.8 2.8c-.2.2-.3.5-.3.8 0 .2.1.4.2.6.2.3.4.6.7.9.3.4.7.8 1.1 1.2s.9.8 1.4 1.1c.3.3.6.5.9.7.2.1.4.2.6.2.3 0 .6-.1.8-.3l2.8-2.8zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg>
+                            WhatsApp
+                        </a>
+                        <a href="https://www.instagram.com/tricksterik_wb/" target="_blank" class="social-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.7 7.6L15 15.8c-.1.4-.4.5-.8.3l-3-2.2-1.4 1.4c-.1.1-.3.3-.5.3l.2-3.1 2.7-2.4c.1-.1 0-.3-.2-.2l-3.4 2.1-.3.1c-.2 0-.4-.1-.4-.4L8.2 9.7c-.1-.4.2-.6.6-.5l6.5 2.4c.3.1.4.4.4.6z"/></svg>
+                            Instagram
+                        </a>
+                    </div>
+                    <p>Или оставьте заявку, и моя команда свяжется с вами:</p>
+                    <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                        <input type="text" name="name" placeholder="Ваше имя" required>
+                        <input type="text" name="contact" placeholder="Телефон или Telegram" required>
+                        <textarea name="message" rows="4" placeholder="Кратко опишите ваш запрос"></textarea>
+                        <button type="submit" class="cta-button">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Анимация фона в Hero ---
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles;
+
+    function init() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        particles = [];
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(106, 68, 255, 0.5)';
+            ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (dist < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 209, 255, ${1 - dist / 150})`;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    init();
+    animate();
+    window.addEventListener('resize', init);
+
+    // --- GSAP Анимации ---
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Header scroll
+    const header = document.querySelector('.header');
+    ScrollTrigger.create({
+        start: 'top -80',
+        end: 99999,
+        toggleClass: { className: 'scrolled', target: header }
+    });
+    
+    // Hero content
+    gsap.from('.hero-content > *', {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power3.out'
+    });
+
+    // Анимация секций при скролле
+    document.querySelectorAll('.section').forEach(section => {
+        gsap.from(section.querySelectorAll(".section-title, .about-grid, .services-grid, .cases-grid, .reviews-slider-wrapper, .contact-wrapper"), {
+            scrollTrigger: {
+                trigger: section,
+                start: "top 80%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'power3.out'
+        });
+    });
+    
+    // --- Слайдер отзывов ---
+    const slider = document.querySelector('.reviews-slider');
+    const reviews = document.querySelectorAll('.review');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    let currentIndex = 0;
+
+    function updateSlider() {
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % reviews.length;
+        updateSlider();
+    });
+
+    prevBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + reviews.length) % reviews.length;
+        updateSlider();
+    });
+});
+</script>
+
+</body>
+</html>
